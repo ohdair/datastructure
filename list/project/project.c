@@ -134,4 +134,3 @@ t_linked_list_node	*ft_create_element(int degree, int coef)
 	new_element->next = NULL;
 	return (new_element);
 }
-```

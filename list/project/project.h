@@ -31,4 +31,3 @@ void				ft_print_linked_list(t_linked_list *p_list);
 void				ft_reverse_linked_list(t_linked_list *p_list);
 
 #endif
-```
