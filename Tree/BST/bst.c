@@ -69,47 +69,41 @@ int insertElementBST(BinSearchTree* pBinSearchTree, BinSearchTreeNode* element)
     // }
     if (p->key > element->key)
     {
-		if (p->pLeftChild == NULL)
-		{
-			p->pLeftChild = element;
-			return TRUE;
-		}
+		  if (p->pLeftChild == NULL)
+		  {
+		  	p->pLeftChild = element;
+		  	return TRUE;
+		  }
       p = p->pLeftChild;
     }
     else
     {
-		if (p->pRightChild == NULL)
-		{
-			p->pRightChild = element;
-			return TRUE;
-		}
+		  if (p->pRightChild == NULL)
+		  {
+		  	p->pRightChild = element;
+		  	return TRUE;
+		  }
       p = p->pRightChild;
     }
   }
   return TRUE; //성공 1 실패 0
 }
 
-BinSearchTreeNode* getParentsNode(BinSearchTree* pBinSearchTree, int key)
+static BinSearchTreeNode* getParentsNode(BinSearchTree* pBinSearchTree, BinSearchTreeNode* pDelNode)
 {
   BinSearchTreeNode *result = pBinSearchTree->pRootNode;
 
   while(result != NULL) {
-    if (key == result->pLeftChild->key || key == result->pRightChild->key){
-
+    if (pDelNode == result->pLeftChild || pDelNode == result->pRightChild){
       break;
     }
-    else if (key < result->pLeftChild->key) {
-
+    else if (pDelNode->key < result->key) {
       result = result->pLeftChild;
     }
-    else if (key < result->pRightChild->key){
-
+    else 
       result = result->pRightChild;
-    }
-	else
-		result = NULL;
   }
-  return result;
+    return result;
 }
 
 BinSearchTreeNode *getpSuccessor(BinSearchTreeNode *pDelNode)
@@ -117,7 +111,7 @@ BinSearchTreeNode *getpSuccessor(BinSearchTreeNode *pDelNode)
   BinSearchTreeNode *result;
 
   result = pDelNode->pRightChild;
-  while (result->pLeftChild == NULL)
+  while (result->pLeftChild != NULL)
   {
     result = result->pLeftChild;
   }
@@ -126,7 +120,6 @@ BinSearchTreeNode *getpSuccessor(BinSearchTreeNode *pDelNode)
 
 int deleteElementBST(BinSearchTree* pBinSearchTree, int key)
 {
-  int ret;
   BinSearchTreeNode *pDelNode; //삭제할 노드
   BinSearchTreeNode *pParentNode; //삭제할 노드의 부모녿
   BinSearchTreeNode *pPredecessor;  //대체노드의 부모노드
@@ -138,9 +131,12 @@ int deleteElementBST(BinSearchTree* pBinSearchTree, int key)
     삭제할 노드가 몇개의 자식노드를 가지는지 어떻게 알수있나..
   */
   pDelNode = searchBST(pBinSearchTree, key);
-
-  pParentNode = getParentsNode(pBinSearchTree, key);
-	write (1, "1\n", 1);
+  if (pDelNode == NULL)
+  {
+    write(1, "NOT FOUND\n", 10);
+    return FALSE;
+  }
+  pParentNode = getParentsNode(pBinSearchTree, pDelNode);
   //단말노드
   if (pDelNode->pLeftChild == NULL && pDelNode->pRightChild == NULL)
   {
@@ -151,9 +147,10 @@ int deleteElementBST(BinSearchTree* pBinSearchTree, int key)
       pParentNode->pRightChild = NULL;
     pDelNode = NULL;
     free(pDelNode);
+    return TRUE;
   }
   //자식노드 1 개 왼쪽이 존제
-  if (pDelNode->pLeftChild != NULL && pDelNode->pRightChild == NULL)
+  else if (pDelNode->pLeftChild != NULL && pDelNode->pRightChild == NULL)
   {
     if (pParentNode->pLeftChild == pDelNode)
       pParentNode->pLeftChild = pDelNode->pLeftChild;
@@ -161,9 +158,10 @@ int deleteElementBST(BinSearchTree* pBinSearchTree, int key)
       pParentNode->pRightChild = pDelNode->pLeftChild;
     pDelNode = NULL;
     free(pDelNode);
+    return TRUE;
   }
   //자식노드 1 개 오른쪽 존제
-  if (pDelNode->pLeftChild == NULL && pDelNode->pRightChild != NULL)
+  else if (pDelNode->pLeftChild == NULL && pDelNode->pRightChild != NULL)
   {
     if (pParentNode->pLeftChild == pDelNode)
       pParentNode->pLeftChild = pDelNode->pRightChild;
@@ -171,15 +169,16 @@ int deleteElementBST(BinSearchTree* pBinSearchTree, int key)
       pParentNode->pRightChild = pDelNode->pRightChild;
     pDelNode = NULL;
     free(pDelNode);
+    return TRUE;
   }
 
   //자식노드 2 개
-  if (pDelNode->pLeftChild != NULL && pDelNode->pRightChild != NULL)
+  else if (pDelNode->pLeftChild != NULL && pDelNode->pRightChild != NULL)
   {
     pSuccessor = getpSuccessor(pDelNode);
     pDelNode->key = pSuccessor->key;
     pDelNode->value = pSuccessor->value;
-    pPredecessor = getParentsNode(pBinSearchTree, pSuccessor->key);
+    pPredecessor = getParentsNode(pBinSearchTree, pSuccessor);
     if (pSuccessor->pRightChild == NULL)
       pPredecessor->pLeftChild = NULL;
     else
@@ -187,7 +186,7 @@ int deleteElementBST(BinSearchTree* pBinSearchTree, int key)
     pSuccessor = NULL;
     free(pSuccessor);
   }
-  return ret; //성공 1 실패 0
+  return TRUE; //성공 1 실패 0
 }
 
 
