@@ -10,11 +10,13 @@ LinkedList* createLinkedList() {
 }
 
 // 값 가져오기
-int getLinkedListData(LinkedList* pList, int position) {
+int getLinkedListData(LinkedList* pList, int nodeNumber) {
 	int i = 0;
 
 	ListNode* pCurrentNode = &(pList->headerNode);
-	for (i = 0; i <= position; ++i) {
+	for (i = 0; i <= pList->currentCount; ++i) {
+		if (pCurrentNode->nodeNumber == nodeNumber)
+			break;
 		pCurrentNode = pCurrentNode->pLink;
 	}
 
@@ -22,16 +24,17 @@ int getLinkedListData(LinkedList* pList, int position) {
 }
 
 // 새로운 자료 추가
-void addLinkedListData(LinkedList* pList, int position, int data) {
+void addLinkedListData(LinkedList* pList, int nodeNumber, int data) {
 	int i = 0;
 	ListNode* pNewNode = NULL;
 	ListNode* pPreNode = NULL;
 
 	pNewNode = (ListNode*)malloc(sizeof(ListNode));
 	pNewNode->data = data;
+	pNewNode->nodeNumber = nodeNumber;
 
 	pPreNode = &(pList->headerNode);
-	for (i = 0; i < position; ++i) {
+	for (i = 0; i < pList->currentCount; ++i) {
 		pPreNode = pPreNode->pLink;
 	}
 
@@ -41,13 +44,15 @@ void addLinkedListData(LinkedList* pList, int position, int data) {
 }
 
 // 기존 자료 제거
-void removeLinkedListData(LinkedList* pList, int position) {
+void removeLinkedListData(LinkedList* pList, int nodeNumber) {
 	int i = 0;
 	ListNode* pDelNode = NULL;
 	ListNode* pPreNode = NULL;
 
 	pPreNode = &(pList->headerNode);
-	for (i = 0; i < position; ++i) {
+	for (i = 0; i < pList->currentCount; ++i) {
+		if (pPreNode->nodeNumber == nodeNumber)
+			break;
 		pPreNode = pPreNode->pLink;
 	}
 

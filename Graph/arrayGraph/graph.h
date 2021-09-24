@@ -1,7 +1,7 @@
 #ifndef _GRAPH_H_
 # define _GRAPH_H_
 
-#include "linkedList.h"
+#include "../linkedList.h"
 
 typedef struct DirectLinkedGraphType
 {
