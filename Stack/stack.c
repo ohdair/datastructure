@@ -1,4 +1,14 @@
-#include "../list/linked_list.h"
+#include "stack.h"
+
+
+Stack *init(void){
+  Stack *ret = NULL;
+  ret = (Stack*)malloc(sizeof(Stack));
+  ret->count = 0;
+  ret->top = NULL;
+
+  return ret;
+}
 
 void ft_push(t_linked_list *pList, int data){
   t_linked_list_node *new_node = NULL;
